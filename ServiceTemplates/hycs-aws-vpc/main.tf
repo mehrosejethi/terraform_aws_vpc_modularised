@@ -2,10 +2,6 @@ provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
-  assume_role {
-    role_arn     = "arn:aws:iam::${var.assume_role_id}:role/OrganizationAccountAccessRole"
-    
-  }
 }
 
 provider "aws" {
@@ -14,9 +10,6 @@ provider "aws" {
   access_key = "${var.access_key}"
   secret_key = "${var.secret_key}"
   region     = "${var.region}"
-  assume_role {
-    role_arn     = "arn:aws:iam::${var.shared_service_account_id}:role/OrganizationAccountAccessRole"
-  }
 }
 
 /*
@@ -49,7 +42,7 @@ resource "aws_internet_gateway" "vpc_ig" {
 */
 
 module "subnet_public" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-subnet-route"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-subnet-route"
 
   subnet_type = "public"
   
@@ -68,7 +61,7 @@ module "subnet_public" {
 */
 
 module "subnet_nat" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-subnet-route"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-subnet-route"
 
   subnet_type = "nat"
   
@@ -86,7 +79,7 @@ module "subnet_nat" {
 */
 
 module "subnet_private" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-subnet-route"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-subnet-route"
 
   subnet_type = "private"
   
@@ -105,7 +98,7 @@ module "subnet_private" {
 */
 
 module "nat_gateway" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-nat-eip"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-nat-eip"
 
   availability_zones_list = "${var.availability_zones_list}"
   public_subnet_ids = "${module.subnet_public.subnet_ids}"
@@ -502,7 +495,7 @@ resource "aws_default_security_group" "vpc_sg_default" {
 */
 
 module "flowlog_role_policy" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-iam-role-policy"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-iam-role-policy"
 
   iam_policies_url = "${var.iam_policies_url}"
   iam_policy_directory = "IAM_System_Roles/HYCS_VPC_Flow_Logs.json"
@@ -516,7 +509,7 @@ module "flowlog_role_policy" {
 }
 
 module "flowlog_cloudwatch_log_group" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-cloudwatch-log-group"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-cloudwatch-log-group"
 
   cloudwatch_log_name                 = "${var.cloudwatch_flow_log_name}"
   cloudwatch_retention_days           = "${var.cw_flowlogs_retention_days}"
@@ -537,7 +530,7 @@ resource "aws_flow_log" "flow_log" {
 */
 
 module "syslog_cloudwatch_log_group" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-cloudwatch-log-group"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-cloudwatch-log-group"
 
   cloudwatch_log_name                 = "${var.cw_syslog_group}"
   cloudwatch_retention_days           = "${var.cw_syslogs_retention_days}"
@@ -549,7 +542,7 @@ module "syslog_cloudwatch_log_group" {
 /* During account creation
 
 module "syslog_log_role_policy" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-iam-role-policy"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-iam-role-policy"
 
   iam_policies_url = "${var.iam_policies_url}"
   iam_policy_directory = "IAM_System_Roles/HYCS_EC2_System_Role.json"
@@ -567,7 +560,7 @@ module "syslog_log_role_policy" {
 */
 
 module "aws_config_role_policy" {
-  source = "git::https://github.pwc.com/mehrose-jethi/terraform_modules.git//CoreModules/hycs-aws-iam-role-policy"
+  source = "git::https://github.com/mehrosejethi/terraform_aws_vpc_modularised.git//CoreModules/hycs-aws-iam-role-policy"
 
   iam_policies_url = "${var.iam_policies_url}"
   github_iam_token = "${var.github_iam_token}"
